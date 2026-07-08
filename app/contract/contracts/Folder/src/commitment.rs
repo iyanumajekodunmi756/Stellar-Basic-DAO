@@ -1,4 +1,4 @@
-use crate::errors:: RustAcademyError;
+use crate::errors::RustAcademyError;
 use soroban_sdk::{xdr::ToXdr, Address, Bytes, BytesN, Env};
 
 /// # Commitment Scheme Invariants
@@ -51,12 +51,12 @@ use soroban_sdk::{xdr::ToXdr, Address, Bytes, BytesN, Env};
 ///
 /// Verification paths also accept the legacy `SHA256(XDR(owner) || BE(amount) || salt)`
 /// commitment so older privacy escrows remain valid after the migration.
-fn validate_commitment_input(amount: i128, salt: &Bytes) -> Result<(),  RustAcademyError> {
+fn validate_commitment_input(amount: i128, salt: &Bytes) -> Result<(), RustAcademyError> {
     if amount < 0 {
-        return Err( RustAcademyError::InvalidAmount);
+        return Err(RustAcademyError::InvalidAmount);
     }
     if salt.len() > 1024 {
-        return Err( RustAcademyError::InvalidSalt);
+        return Err(RustAcademyError::InvalidSalt);
     }
     Ok(())
 }
@@ -74,7 +74,7 @@ pub(crate) fn amount_commitment_hashes(
     owner: &Address,
     amount: i128,
     salt: &Bytes,
-) -> Result<(BytesN<32>, BytesN<32>),  RustAcademyError> {
+) -> Result<(BytesN<32>, BytesN<32>), RustAcademyError> {
     validate_commitment_input(amount, salt)?;
     let payload = build_commitment_payload(env, owner, amount, salt);
     Ok((
@@ -88,7 +88,7 @@ pub fn create_amount_commitment(
     owner: Address,
     amount: i128,
     salt: Bytes,
-) -> Result<BytesN<32>,  RustAcademyError> {
+) -> Result<BytesN<32>, RustAcademyError> {
     let (commitment, _) = amount_commitment_hashes(env, &owner, amount, &salt)?;
     Ok(commitment)
 }

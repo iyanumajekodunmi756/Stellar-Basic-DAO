@@ -1,10 +1,10 @@
-use crate::{errors:: RustAcademyError, events, storage, types::HookEventKind};
+use crate::{errors::RustAcademyError, events, storage, types::HookEventKind};
 use soroban_sdk::{Address, BytesN, Env, IntoVal, Symbol, Vec};
 
-pub fn register_hook(env: &Env, hook_contract: Address) -> Result<(),  RustAcademyError> {
+pub fn register_hook(env: &Env, hook_contract: Address) -> Result<(), RustAcademyError> {
     let mut hooks = storage::get_registered_hooks(env);
     if hooks.contains(hook_contract.clone()) {
-        return Err( RustAcademyError::HookAlreadyRegistered);
+        return Err(RustAcademyError::HookAlreadyRegistered);
     }
     hooks.push_back(hook_contract.clone());
     storage::set_registered_hooks(env, &hooks);
@@ -12,7 +12,7 @@ pub fn register_hook(env: &Env, hook_contract: Address) -> Result<(),  RustAcade
     Ok(())
 }
 
-pub fn unregister_hook(env: &Env, hook_contract: Address) -> Result<(),  RustAcademyError> {
+pub fn unregister_hook(env: &Env, hook_contract: Address) -> Result<(), RustAcademyError> {
     let hooks = storage::get_registered_hooks(env);
     let mut updated = Vec::new(env);
     let mut found = false;
@@ -24,7 +24,7 @@ pub fn unregister_hook(env: &Env, hook_contract: Address) -> Result<(),  RustAca
         }
     }
     if !found {
-        return Err( RustAcademyError::HookNotRegistered);
+        return Err(RustAcademyError::HookNotRegistered);
     }
     storage::set_registered_hooks(env, &updated);
     events::publish_hook_unregistered(env, hook_contract);
@@ -35,9 +35,9 @@ pub fn get_registered_hooks(env: &Env) -> Vec<Address> {
     storage::get_registered_hooks(env)
 }
 
-pub fn assert_not_reentrant(env: &Env) -> Result<(),  RustAcademyError> {
+pub fn assert_not_reentrant(env: &Env) -> Result<(), RustAcademyError> {
     if storage::get_reentrancy_guard(env) {
-        return Err( RustAcademyError::ReentrancyDetected);
+        return Err(RustAcademyError::ReentrancyDetected);
     }
     Ok(())
 }

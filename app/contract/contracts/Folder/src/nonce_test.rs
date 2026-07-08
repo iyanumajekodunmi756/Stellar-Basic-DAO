@@ -8,7 +8,7 @@ mod tests {
     use soroban_sdk::testutils::{Address as _, Ledger};
 
     use crate::{
-        errors:: RustAcademyError,
+        errors::RustAcademyError,
         nonce::{domain_prefix, is_nonce_used, verify_and_consume},
         test_context::TestContext,
     };
@@ -54,7 +54,7 @@ mod tests {
         ctx.env.as_contract(&contract_id, || {
             verify_and_consume(&ctx.env, &signer, 7, 2_000_000).unwrap();
             let result = verify_and_consume(&ctx.env, &signer, 7, 2_000_000);
-            assert_eq!(result, Err( RustAcademyError::NonceAlreadyUsed));
+            assert_eq!(result, Err(RustAcademyError::NonceAlreadyUsed));
         });
     }
 
@@ -85,7 +85,7 @@ mod tests {
         ctx.env.as_contract(&contract_id, || {
             // valid_until is in the past
             let result = verify_and_consume(&ctx.env, &signer, 1, 999_999);
-            assert_eq!(result, Err( RustAcademyError::SignatureExpired));
+            assert_eq!(result, Err(RustAcademyError::SignatureExpired));
         });
     }
 
@@ -99,7 +99,7 @@ mod tests {
         ctx.env.as_contract(&contract_id, || {
             // valid_until == current timestamp → expired (strict <)
             let result = verify_and_consume(&ctx.env, &signer, 1, 1_000_000);
-            assert_eq!(result, Err( RustAcademyError::SignatureExpired));
+            assert_eq!(result, Err(RustAcademyError::SignatureExpired));
         });
     }
 
@@ -132,7 +132,7 @@ mod tests {
             // Nonce 100 is consumed.
             assert_eq!(
                 verify_and_consume(&ctx.env, &signer, 100, 2_000_000),
-                Err( RustAcademyError::NonceAlreadyUsed)
+                Err(RustAcademyError::NonceAlreadyUsed)
             );
         });
     }

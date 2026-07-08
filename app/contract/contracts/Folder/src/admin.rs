@@ -543,7 +543,10 @@ pub fn require_not_paused_global(env: &Env) -> Result<(), RustAcademyError> {
 /// Require that a specific feature is not paused.
 ///
 /// Checks the granular pause flags for specific operations.
-pub fn require_feature_not_paused(env: &Env, flag: crate::storage::PauseFlag) -> Result<(), RustAcademyError> {
+pub fn require_feature_not_paused(
+    env: &Env,
+    flag: crate::storage::PauseFlag,
+) -> Result<(), RustAcademyError> {
     if storage::is_feature_paused(env, flag) {
         return Err(RustAcademyError::OperationPaused);
     }
@@ -553,7 +556,10 @@ pub fn require_feature_not_paused(env: &Env, flag: crate::storage::PauseFlag) ->
 /// Standard guard for user-initiated deposit operations.
 ///
 /// Checks: emergency mode, global pause, feature pause, reentrancy.
-pub fn guard_deposit(env: &Env, pause_flag: crate::storage::PauseFlag) -> Result<(), RustAcademyError> {
+pub fn guard_deposit(
+    env: &Env,
+    pause_flag: crate::storage::PauseFlag,
+) -> Result<(), RustAcademyError> {
     require_not_emergency_mode(env)?;
     require_not_paused_global(env)?;
     require_feature_not_paused(env, pause_flag)?;
@@ -565,7 +571,10 @@ pub fn guard_deposit(env: &Env, pause_flag: crate::storage::PauseFlag) -> Result
 ///
 /// Checks: global pause, feature pause, reentrancy.
 /// Note: Emergency mode does NOT block withdrawals (users need to access funds).
-pub fn guard_withdraw(env: &Env, pause_flag: crate::storage::PauseFlag) -> Result<(), RustAcademyError> {
+pub fn guard_withdraw(
+    env: &Env,
+    pause_flag: crate::storage::PauseFlag,
+) -> Result<(), RustAcademyError> {
     require_not_paused_global(env)?;
     require_feature_not_paused(env, pause_flag)?;
     crate::hook::assert_not_reentrant(env)?;
@@ -575,7 +584,10 @@ pub fn guard_withdraw(env: &Env, pause_flag: crate::storage::PauseFlag) -> Resul
 /// Standard guard for refund operations.
 ///
 /// Checks: global pause, feature pause, reentrancy.
-pub fn guard_refund(env: &Env, pause_flag: crate::storage::PauseFlag) -> Result<(), RustAcademyError> {
+pub fn guard_refund(
+    env: &Env,
+    pause_flag: crate::storage::PauseFlag,
+) -> Result<(), RustAcademyError> {
     require_not_paused_global(env)?;
     require_feature_not_paused(env, pause_flag)?;
     crate::hook::assert_not_reentrant(env)?;
@@ -612,7 +624,10 @@ pub fn guard_initialized(env: &Env) -> Result<(), RustAcademyError> {
 /// Standard guard for stealth address operations.
 ///
 /// Checks: global pause, feature pause, reentrancy.
-pub fn guard_stealth(env: &Env, pause_flag: crate::storage::PauseFlag) -> Result<(), RustAcademyError> {
+pub fn guard_stealth(
+    env: &Env,
+    pause_flag: crate::storage::PauseFlag,
+) -> Result<(), RustAcademyError> {
     require_not_paused_global(env)?;
     require_feature_not_paused(env, pause_flag)?;
     crate::hook::assert_not_reentrant(env)?;
@@ -629,7 +644,12 @@ pub fn set_pause_flags(
     require_any_role(env, caller, &[Role::Admin, Role::Operator])?;
 
     storage::set_pause_flags(env, caller, flags_to_enable, flags_to_disable);
-    crate::events::publish_pause_flags_changed(env, caller.clone(), flags_to_enable, flags_to_disable);
+    crate::events::publish_pause_flags_changed(
+        env,
+        caller.clone(),
+        flags_to_enable,
+        flags_to_disable,
+    );
     Ok(())
 }
 

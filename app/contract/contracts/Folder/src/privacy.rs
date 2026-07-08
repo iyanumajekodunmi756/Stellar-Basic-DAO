@@ -1,4 +1,4 @@
-use crate::errors:: RustAcademyError;
+use crate::errors::RustAcademyError;
 use crate::events::publish_privacy_toggled;
 use crate::storage::{DataKey, PRIVACY_ENABLED_KEY};
 use soroban_sdk::{Address, Env, Symbol};
@@ -28,12 +28,12 @@ fn read_privacy_flag(env: &Env, owner: &Address) -> bool {
 /// Reads the current state first and returns [` RustAcademyError::PrivacyAlreadySet`]
 /// if the requested value matches the current value. Otherwise persists the new
 /// state and publishes a [`crate::events::publish_privacy_toggled`] event.
-pub fn set_privacy(env: &Env, owner: Address, enabled: bool) -> Result<(),  RustAcademyError> {
+pub fn set_privacy(env: &Env, owner: Address, enabled: bool) -> Result<(), RustAcademyError> {
     owner.require_auth();
 
     let current = read_privacy_flag(env, &owner);
     if current == enabled {
-        return Err( RustAcademyError::PrivacyAlreadySet);
+        return Err(RustAcademyError::PrivacyAlreadySet);
     }
 
     let typed_key = typed_privacy_key(&owner);

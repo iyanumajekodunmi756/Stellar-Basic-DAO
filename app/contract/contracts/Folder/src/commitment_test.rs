@@ -6,16 +6,16 @@
 //! **Upgrade/regression suite:** `test_create_and_verify_commitment_success` is part of the
 //! golden path regression suite. See `REGRESSION_TESTS.md` and `src/test.rs` module doc.
 
-use crate::{errors:: RustAcademyError,  RustAcademyContract,  RustAcademyContractClient};
+use crate::{errors::RustAcademyError, RustAcademyContract, RustAcademyContractClient};
 use soroban_sdk::{testutils::Address as _, xdr::ToXdr, Address, Bytes, BytesN, Env};
 
 extern crate std;
 
-fn setup<'a>() -> (Env,  RustAcademyContractClient<'a>) {
+fn setup<'a>() -> (Env, RustAcademyContractClient<'a>) {
     let env = Env::default();
     env.mock_all_auths();
-    let contract_id = env.register( RustAcademyContract, ());
-    let client =  RustAcademyContractClient::new(&env, &contract_id);
+    let contract_id = env.register(RustAcademyContract, ());
+    let client = RustAcademyContractClient::new(&env, &contract_id);
     (env, client)
 }
 
@@ -279,7 +279,7 @@ fn test_commitment_negative_amount_rejected() {
     let salt = Bytes::from_slice(&env, b"negative_test");
 
     let result = client.try_create_amount_commitment(&owner, &amount, &salt);
-    assert_eq!(result, Err(Ok( RustAcademyError::InvalidAmount)));
+    assert_eq!(result, Err(Ok(RustAcademyError::InvalidAmount)));
 }
 
 #[test]
@@ -305,7 +305,7 @@ fn test_commitment_oversized_salt_rejected() {
     }
 
     let result = client.try_create_amount_commitment(&owner, &amount, &large_salt);
-    assert_eq!(result, Err(Ok( RustAcademyError::InvalidSalt)));
+    assert_eq!(result, Err(Ok(RustAcademyError::InvalidSalt)));
 }
 
 // ============================================================================

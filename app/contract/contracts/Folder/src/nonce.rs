@@ -36,7 +36,7 @@
 
 use soroban_sdk::{contracttype, Address, Env};
 
-use crate::errors:: RustAcademyError;
+use crate::errors::RustAcademyError;
 use crate::storage::{LEDGER_THRESHOLD, SIX_MONTHS_IN_LEDGERS};
 
 // ---------------------------------------------------------------------------
@@ -72,16 +72,16 @@ pub fn verify_and_consume(
     signer: &Address,
     nonce: u64,
     valid_until: u64,
-) -> Result<(),  RustAcademyError> {
+) -> Result<(), RustAcademyError> {
     // 1. Expiry check — reject if the window has closed.
     if env.ledger().timestamp() >= valid_until {
-        return Err( RustAcademyError::SignatureExpired);
+        return Err(RustAcademyError::SignatureExpired);
     }
 
     // 2. Replay check — reject if this nonce was already consumed.
     let key = NonceKey::Used(signer.clone(), nonce);
     if env.storage().persistent().has(&key) {
-        return Err( RustAcademyError::NonceAlreadyUsed);
+        return Err(RustAcademyError::NonceAlreadyUsed);
     }
 
     // 3. Consume — mark as used with a 6-month TTL.

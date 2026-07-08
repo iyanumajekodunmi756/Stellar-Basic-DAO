@@ -23,13 +23,11 @@
 //! cargo test upgrade_safety_gate_ -- --nocapture
 //! ```
 
-
-
 use crate::{
-    errors:: RustAcademyError,
+    errors::RustAcademyError,
     storage::{CURRENT_CONTRACT_VERSION, LEGACY_CONTRACT_VERSION, PRIVACY_ENABLED_KEY},
     types::FeeConfig,
-    EscrowStatus,  RustAcademyContract,  RustAcademyContractClient,
+    EscrowStatus, RustAcademyContract, RustAcademyContractClient,
 };
 use soroban_sdk::{
     contract, contractimpl,
@@ -56,9 +54,9 @@ pub struct LegacyV0Contract;
 #[contractimpl]
 impl LegacyV0Contract {
     /// Initialize without writing `ContractVersion` — defining trait of a legacy (v0) deployment.
-    pub fn initialize(env: Env, admin: Address) -> Result<(),  RustAcademyError> {
+    pub fn initialize(env: Env, admin: Address) -> Result<(), RustAcademyError> {
         if crate::storage::get_admin(&env).is_some() {
-            return Err( RustAcademyError::AlreadyInitialized);
+            return Err(RustAcademyError::AlreadyInitialized);
         }
         crate::storage::set_admin(&env, &admin);
         crate::storage::set_paused(&env, false);
@@ -78,7 +76,7 @@ impl LegacyV0Contract {
         salt: Bytes,
         timeout_secs: u64,
         arbiter: Option<Address>,
-    ) -> Result<BytesN<32>,  RustAcademyError> {
+    ) -> Result<BytesN<32>, RustAcademyError> {
         crate::escrow::deposit(&env, token, amount, owner, salt, timeout_secs, arbiter)
     }
 
@@ -89,15 +87,19 @@ impl LegacyV0Contract {
         _commitment: BytesN<32>,
         to: Address,
         salt: Bytes,
-    ) -> Result<bool,  RustAcademyError> {
+    ) -> Result<bool, RustAcademyError> {
         crate::escrow::withdraw(&env, amount, to, salt)
     }
 
-    pub fn dispute(env: Env, commitment: BytesN<32>) -> Result<(),  RustAcademyError> {
+    pub fn dispute(env: Env, commitment: BytesN<32>) -> Result<(), RustAcademyError> {
         crate::escrow::dispute(&env, commitment)
     }
 
-    pub fn refund(env: Env, commitment: BytesN<32>, caller: Address) -> Result<(),  RustAcademyError> {
+    pub fn refund(
+        env: Env,
+        commitment: BytesN<32>,
+        caller: Address,
+    ) -> Result<(), RustAcademyError> {
         crate::escrow::refund(&env, commitment, caller)
     }
 
@@ -106,7 +108,7 @@ impl LegacyV0Contract {
         crate::storage::set_fee_config(&env, &config);
     }
 
-    pub fn set_privacy(env: Env, owner: Address, enabled: bool) -> Result<(),  RustAcademyError> {
+    pub fn set_privacy(env: Env, owner: Address, enabled: bool) -> Result<(), RustAcademyError> {
         crate::privacy::set_privacy(&env, owner, enabled)
     }
 }
@@ -259,9 +261,9 @@ fn build_golden_state() -> (Env, GoldenState) {
 
 /// Swap the legacy WASM for the current ` RustAcademyContract` on the same address,
 /// returning a ready-to-use client pointing at the upgraded contract.
-fn upgrade_to_current<'a>(env: &'a Env, contract_id: &Address) ->  RustAcademyContractClient<'a> {
-    env.register_at(contract_id,  RustAcademyContract, ());
-     RustAcademyContractClient::new(env, contract_id)
+fn upgrade_to_current<'a>(env: &'a Env, contract_id: &Address) -> RustAcademyContractClient<'a> {
+    env.register_at(contract_id, RustAcademyContract, ());
+    RustAcademyContractClient::new(env, contract_id)
 }
 
 // ============================================================================
@@ -514,7 +516,7 @@ fn upgrade_harness_non_admin_migrate_fails() {
     let result = client.try_migrate(&non_admin);
     assert_eq!(
         result,
-        Err(Ok( RustAcademyError::InsufficientRole)),
+        Err(Ok(RustAcademyError::InsufficientRole)),
         "non-admin migrate must fail with InsufficientRole"
     );
 }
@@ -527,8 +529,8 @@ fn upgrade_harness_migrate_without_admin_fails_gracefully() {
     env.mock_all_auths();
 
     // Current contract registered but never initialized — no admin in storage.
-    let contract_id = env.register( RustAcademyContract, ());
-    let client =  RustAcademyContractClient::new(&env, &contract_id);
+    let contract_id = env.register(RustAcademyContract, ());
+    let client = RustAcademyContractClient::new(&env, &contract_id);
 
     let caller = Address::generate(&env);
     let result = client.try_migrate(&caller);
@@ -565,8 +567,8 @@ fn upgrade_harness_legacy_symbol_privacy_key_readable_after_upgrade() {
     });
 
     // Upgrade + migrate.
-    env.register_at(&contract_id,  RustAcademyContract, ());
-    let client =  RustAcademyContractClient::new(&env, &contract_id);
+    env.register_at(&contract_id, RustAcademyContract, ());
+    let client = RustAcademyContractClient::new(&env, &contract_id);
     client.migrate(&admin);
 
     assert!(
@@ -666,7 +668,7 @@ fn seed_admin_role<'a>(
     env: &'a Env,
     contract_id: &Address,
     admin: &Address,
-) ->  RustAcademyContractClient<'a> {
+) -> RustAcademyContractClient<'a> {
     let client = upgrade_to_current(env, contract_id);
     client.migrate(admin);
     client
@@ -777,7 +779,7 @@ fn upgrade_safety_gate_invariant_failure_deterministic() {
     let result = client.try_complete_upgrade(&gs.admin, &CURRENT_CONTRACT_VERSION);
     assert_eq!(
         result,
-        Err(Ok( RustAcademyError::InternalError)),
+        Err(Ok(RustAcademyError::InternalError)),
         "complete_upgrade must fail with InternalError when invariants are violated"
     );
 
@@ -927,10 +929,7 @@ fn upgrade_safety_gate_blocks_upgrade_with_wrong_hash() {
 
     // Attempt upgrade() with wrong hash → fails.
     let result = client.try_upgrade(&gs.admin, &wrong_hash);
-    assert!(
-        result.is_err(),
-        "upgrade() with wrong hash must fail"
-    );
+    assert!(result.is_err(), "upgrade() with wrong hash must fail");
 
     // Correct hash succeeds.
     client.upgrade(&gs.admin, &correct_hash);

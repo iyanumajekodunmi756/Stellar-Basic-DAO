@@ -46,7 +46,7 @@
 
 use soroban_sdk::{xdr::ToXdr, Address, Bytes, BytesN, Env};
 
-use crate::errors:: RustAcademyError;
+use crate::errors::RustAcademyError;
 
 /// Domain separation tag for escrow-id derivation.
 ///
@@ -89,12 +89,12 @@ pub fn derive_escrow_id(
     salt: &Bytes,
     timeout_secs: u64,
     arbiter: &Option<Address>,
-) -> Result<BytesN<32>,  RustAcademyError> {
+) -> Result<BytesN<32>, RustAcademyError> {
     if amount < 0 {
-        return Err( RustAcademyError::InvalidAmount);
+        return Err(RustAcademyError::InvalidAmount);
     }
     if salt.len() > MAX_SALT_LEN {
-        return Err( RustAcademyError::InvalidSalt);
+        return Err(RustAcademyError::InvalidSalt);
     }
 
     let mut payload = Bytes::new(env);
@@ -161,12 +161,12 @@ pub fn derive_partial_escrow_id(
     salt: &Bytes,
     timeout_secs: u64,
     arbiter: &Option<Address>,
-) -> Result<BytesN<32>,  RustAcademyError> {
+) -> Result<BytesN<32>, RustAcademyError> {
     if amount_due < 0 || initial_payment < 0 {
-        return Err( RustAcademyError::InvalidAmount);
+        return Err(RustAcademyError::InvalidAmount);
     }
     if salt.len() > MAX_SALT_LEN {
-        return Err( RustAcademyError::InvalidSalt);
+        return Err(RustAcademyError::InvalidSalt);
     }
 
     let mut payload = Bytes::new(env);

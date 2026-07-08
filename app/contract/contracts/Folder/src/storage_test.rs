@@ -3,7 +3,7 @@ use soroban_sdk::{testutils::Ledger, Vec};
 fn test_ttl_auto_extend_on_activity() {
     // No need to import Ledger trait; only use set_timestamp
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let commitment: Bytes = Bytes::from_array(&env, &[3u8; 32]);
         let token = Address::generate(&env);
@@ -38,7 +38,7 @@ fn test_ttl_auto_extend_on_activity() {
 fn test_ttl_expiry_of_inactive_record() {
     use soroban_sdk::testutils::Ledger;
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let commitment: Bytes = Bytes::from_array(&env, &[4u8; 32]);
         let token = Address::generate(&env);
@@ -71,7 +71,7 @@ fn test_ttl_expiry_of_inactive_record() {
 #[test]
 fn test_cleanup_does_not_remove_active_escrow() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let commitment: Bytes = Bytes::from_array(&env, &[5u8; 32]);
         let token = Address::generate(&env);
@@ -108,7 +108,7 @@ use crate::{
 #[test]
 fn test_escrow_storage() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         // Test basic escrow storage
         let commitment: Bytes = Bytes::from_array(&env, &[1u8; 32]);
@@ -156,7 +156,7 @@ fn test_escrow_storage() {
 #[test]
 fn test_escrow_status_update() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let commitment: Bytes = Bytes::from_array(&env, &[1u8; 32]);
         let token = Address::generate(&env);
@@ -199,7 +199,7 @@ fn test_escrow_status_update() {
 #[test]
 fn test_escrow_counter() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         // Test initial counter value
         assert_eq!(get_escrow_counter(&env), 0);
@@ -219,7 +219,7 @@ fn test_escrow_counter() {
 #[test]
 fn test_contract_version_storage() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         assert_eq!(get_contract_version(&env), None);
 
@@ -231,7 +231,7 @@ fn test_contract_version_storage() {
 #[test]
 fn test_initialized_flag_storage() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         assert!(!is_initialized(&env));
 
@@ -246,7 +246,7 @@ fn test_initialized_flag_storage() {
 #[test]
 fn test_admin_storage() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let admin = Address::generate(&env);
 
@@ -264,7 +264,7 @@ fn test_admin_storage() {
 #[test]
 fn test_paused_storage() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         // Test initial paused state
         assert!(!is_paused(&env));
@@ -282,7 +282,7 @@ fn test_paused_storage() {
 #[test]
 fn test_privacy_storage() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let account = Address::generate(&env);
         let privacy_level = 5u32;
@@ -327,7 +327,7 @@ fn test_cleanup_removes_auxiliary_indices() {
     use soroban_sdk::BytesN;
 
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let commitment: Bytes = Bytes::from_array(&env, &[7u8; 32]);
         let commitment_n: BytesN<32> = BytesN::from_array(&env, &[7u8; 32]);
@@ -386,7 +386,7 @@ fn test_cleanup_removes_auxiliary_indices() {
 #[test]
 fn test_privacy_history_is_bounded() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let account = Address::generate(&env);
         let total = MAX_PRIVACY_HISTORY + 20;
@@ -410,7 +410,7 @@ fn test_privacy_history_is_bounded() {
 #[test]
 fn test_privacy_level_ttl_extended_on_write_and_read() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let account = Address::generate(&env);
 
@@ -427,7 +427,7 @@ fn test_privacy_level_ttl_extended_on_write_and_read() {
 #[test]
 fn test_privacy_history_ttl_extended_on_write_and_read() {
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let account = Address::generate(&env);
 
@@ -449,7 +449,7 @@ fn test_cleanup_stealth_escrow_removes_terminal_entry() {
     use soroban_sdk::BytesN;
 
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let stealth: BytesN<32> = BytesN::from_array(&env, &[2u8; 32]);
         let entry = StealthEscrowEntry {
@@ -478,7 +478,7 @@ fn test_cleanup_stealth_escrow_rejects_non_terminal() {
     use soroban_sdk::BytesN;
 
     let env = Env::default();
-    let contract_id = env.register(crate:: RustAcademyContract, ());
+    let contract_id = env.register(crate::RustAcademyContract, ());
     env.as_contract(&contract_id, || {
         let stealth: BytesN<32> = BytesN::from_array(&env, &[4u8; 32]);
         let entry = StealthEscrowEntry {

@@ -118,7 +118,12 @@ pub struct EventCompatibility {
 /// the Horizon-reported ledger, and together with `tx_hash` and `paging_token`
 /// forms a complete, stable deduplication key for any event delivery.
 #[allow(dead_code)]
-pub const EVENT_REPLAY_FIELDS: &[&str] = &["event_type_id", "ledger_sequence", "schema_version", "timestamp"];
+pub const EVENT_REPLAY_FIELDS: &[&str] = &[
+    "event_type_id",
+    "ledger_sequence",
+    "schema_version",
+    "timestamp",
+];
 
 // payload_keys are sorted alphabetically. "ledger_sequence" sorts between
 // 'f*' keys and 's*' keys, i.e. after "fee*"/"from_version" and before "paused"/"recipient"/"schema_version".
@@ -128,7 +133,12 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "AdminChanged",
         event_type_id: ETID_ADMIN_CHANGED,
         topics: &[EVENT_TOPIC_ADMIN, "AdminChanged", "old_admin", "new_admin"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -155,7 +165,14 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "ContractMigrated",
         event_type_id: ETID_CONTRACT_MIGRATED,
         topics: &[EVENT_TOPIC_ADMIN, "ContractMigrated", "admin"],
-        payload_keys: &["event_type_id", "from_version", "ledger_sequence", "schema_version", "timestamp", "to_version"],
+        payload_keys: &[
+            "event_type_id",
+            "from_version",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+            "to_version",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -177,7 +194,13 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "ContractPaused",
         event_type_id: ETID_CONTRACT_PAUSED,
         topics: &[EVENT_TOPIC_ADMIN, "ContractPaused", "admin"],
-        payload_keys: &["event_type_id", "ledger_sequence", "paused", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "paused",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -189,7 +212,12 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
             "new_wasm_hash",
             "admin",
         ],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -215,11 +243,7 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
     EventSchema {
         name: "DisputeTimeoutSet",
         event_type_id: ETID_DISPUTE_TIMEOUT_SET,
-        topics: &[
-            EVENT_TOPIC_DISPUTE,
-            "DisputeTimeoutSet",
-            "escrow_id",
-        ],
+        topics: &[EVENT_TOPIC_DISPUTE, "DisputeTimeoutSet", "escrow_id"],
         payload_keys: &[
             "action",
             "event_type_id",
@@ -253,21 +277,38 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "DisputeExpiryActionSet",
         event_type_id: ETID_DISPUTE_EXPIRY_ACTION_SET,
         topics: &[EVENT_TOPIC_ADMIN, "DisputeExpiryActionSet"],
-        payload_keys: &["action", "event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "action",
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "DisputeTimeoutConfigSet",
         event_type_id: ETID_DISPUTE_TIMEOUT_CONFIG_SET,
         topics: &[EVENT_TOPIC_ADMIN, "DisputeTimeoutConfigSet"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timeout_secs", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timeout_secs",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "EmergencyModeActivated",
         event_type_id: ETID_EMERGENCY_MODE_ACTIVATED,
         topics: &[EVENT_TOPIC_ADMIN, "EmergencyModeActivated", "admin"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -311,42 +352,81 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "EscrowDisputed",
         event_type_id: ETID_ESCROW_DISPUTED,
         topics: &[EVENT_TOPIC_ESCROW, "EscrowDisputed", "escrow_id", "arbiter"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "EscrowFinalized",
         event_type_id: ETID_ESCROW_FINALIZED,
         topics: &[EVENT_TOPIC_ESCROW, "EscrowFinalized", "escrow_id", "owner"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp", "token", "total_amount"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+            "token",
+            "total_amount",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "EscrowRefunded",
         event_type_id: ETID_ESCROW_REFUNDED,
         topics: &[EVENT_TOPIC_ESCROW, "EscrowRefunded", "escrow_id", "owner"],
-        payload_keys: &["amount", "event_type_id", "ledger_sequence", "schema_version", "timestamp", "token"],
+        payload_keys: &[
+            "amount",
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+            "token",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "EscrowWithdrawn",
         event_type_id: ETID_ESCROW_WITHDRAWN,
         topics: &[EVENT_TOPIC_ESCROW, "EscrowWithdrawn", "escrow_id", "owner"],
-        payload_keys: &["amount", "event_type_id", "fee", "ledger_sequence", "schema_version", "timestamp", "token"],
+        payload_keys: &[
+            "amount",
+            "event_type_id",
+            "fee",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+            "token",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "FeeCollectorRotated",
         event_type_id: ETID_FEE_COLLECTOR_ROTATED,
         topics: &[EVENT_TOPIC_ADMIN, "FeeCollectorRotated", "new_collector"],
-        payload_keys: &["event_type_id", "ledger_sequence", "rotation_index", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "rotation_index",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "FeeConfigChanged",
         event_type_id: ETID_FEE_CONFIG_CHANGED,
         topics: &[EVENT_TOPIC_ADMIN, "FeeConfigChanged"],
-        payload_keys: &["event_type_id", "fee_bps", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "fee_bps",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -369,21 +449,39 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "PerAssetFeeSet",
         event_type_id: ETID_PER_ASSET_FEE_SET,
         topics: &[EVENT_TOPIC_ADMIN, "PerAssetFeeSet", "token"],
-        payload_keys: &["arbiter_bps", "event_type_id", "fee_bps", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "arbiter_bps",
+            "event_type_id",
+            "fee_bps",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "PlatformWalletChanged",
         event_type_id: ETID_PLATFORM_WALLET_CHANGED,
         topics: &[EVENT_TOPIC_ADMIN, "PlatformWalletChanged", "wallet"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "PrivacyToggled",
         event_type_id: ETID_PRIVACY_TOGGLED,
         topics: &[EVENT_TOPIC_PRIVACY, "PrivacyToggled", "owner"],
-        payload_keys: &["enabled", "event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "enabled",
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -395,7 +493,14 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
             "stealth_address",
             "recipient",
         ],
-        payload_keys: &["amount", "event_type_id", "ledger_sequence", "schema_version", "timestamp", "token"],
+        payload_keys: &[
+            "amount",
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+            "token",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
@@ -433,42 +538,81 @@ pub const EVENT_SCHEMAS: &[EventSchema] = &[
         name: "HookRegistered",
         event_type_id: ETID_HOOK_REGISTERED,
         topics: &[EVENT_TOPIC_ADMIN, "HookRegistered", "hook_contract"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "HookUnregistered",
         event_type_id: ETID_HOOK_UNREGISTERED,
         topics: &[EVENT_TOPIC_ADMIN, "HookUnregistered", "hook_contract"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "UpgradeWindowSet",
         event_type_id: ETID_UPGRADE_WINDOW_SET,
         topics: &[EVENT_TOPIC_ADMIN, "UpgradeWindowSet", "admin"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp", "window_end", "window_start"],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+            "window_end",
+            "window_start",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "PauseFlagsChanged",
         event_type_id: ETID_PAUSE_FLAGS_CHANGED,
         topics: &[EVENT_TOPIC_ADMIN, "PauseFlagsChanged", "admin"],
-        payload_keys: &["event_type_id", "flags_disabled", "flags_enabled", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "flags_disabled",
+            "flags_enabled",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "AuxIndicesCleaned",
         event_type_id: ETID_AUX_INDICES_CLEANED,
         topics: &[EVENT_TOPIC_ESCROW, "AuxIndicesCleaned", "escrow_id"],
-        payload_keys: &["event_type_id", "indices_removed", "ledger_sequence", "schema_version", "timestamp"],
+        payload_keys: &[
+            "event_type_id",
+            "indices_removed",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
     EventSchema {
         name: "StealthEscrowCleaned",
         event_type_id: ETID_STEALTH_ESCROW_CLEANED,
-        topics: &[EVENT_TOPIC_STEALTH, "StealthEscrowCleaned", "stealth_address"],
-        payload_keys: &["event_type_id", "ledger_sequence", "schema_version", "timestamp"],
+        topics: &[
+            EVENT_TOPIC_STEALTH,
+            "StealthEscrowCleaned",
+            "stealth_address",
+        ],
+        payload_keys: &[
+            "event_type_id",
+            "ledger_sequence",
+            "schema_version",
+            "timestamp",
+        ],
         schema_version: EVENT_SCHEMA_VERSION,
     },
 ];
@@ -530,7 +674,6 @@ pub const EVENT_COMPATIBILITY: &[EventCompatibility] = &[
         compatible_versions: &[EVENT_SCHEMA_VERSION],
     },
 ];
-
 
 #[contractevent(topics = ["TOPIC_ADMIN", "EmergencyModeActivated"])]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -1009,7 +1152,7 @@ pub(crate) fn publish_escrow_refunded(
 pub struct AuxIndicesCleanedEvent {
     #[topic]
     pub escrow_id: BytesN<32>,
-    
+
     pub event_type_id: u32,
     pub schema_version: u32,
     pub ledger_sequence: u32,
@@ -1018,11 +1161,7 @@ pub struct AuxIndicesCleanedEvent {
     pub timestamp: u64,
 }
 
-pub(crate) fn publish_aux_indices_cleaned(
-    env: &Env,
-    commitment: BytesN<32>,
-    indices_removed: u32,
-) {
+pub(crate) fn publish_aux_indices_cleaned(env: &Env, commitment: BytesN<32>, indices_removed: u32) {
     AuxIndicesCleanedEvent {
         escrow_id: commitment,
         event_type_id: ETID_AUX_INDICES_CLEANED,
@@ -1174,7 +1313,7 @@ pub(crate) fn publish_stealth_withdrawn(
 pub struct StealthEscrowCleanedEvent {
     #[topic]
     pub stealth_address: BytesN<32>,
-    
+
     pub event_type_id: u32,
     pub schema_version: u32,
     pub ledger_sequence: u32,
@@ -1218,7 +1357,7 @@ pub(crate) fn publish_fee_config_changed(env: &Env, fee_bps: u32) {
 pub struct PlatformWalletChangedEvent {
     #[topic]
     pub wallet: Address,
-    
+
     pub event_type_id: u32,
     pub schema_version: u32,
     pub ledger_sequence: u32,
@@ -1324,7 +1463,10 @@ pub(crate) fn publish_dispute_resolved(
 // Dispute timeout / auto-resolution events (Issue #49)
 // ---------------------------------------------------------------------------
 
-pub(crate) fn dispute_action_symbol(env: &Env, action: crate::types::DisputeExpiryAction) -> Symbol {
+pub(crate) fn dispute_action_symbol(
+    env: &Env,
+    action: crate::types::DisputeExpiryAction,
+) -> Symbol {
     match action {
         crate::types::DisputeExpiryAction::RefundOwner => Symbol::new(env, "refund_owner"),
         crate::types::DisputeExpiryAction::PayArbiter => Symbol::new(env, "pay_arbiter"),
@@ -1339,7 +1481,7 @@ pub struct DisputeTimeoutSetEvent {
 
     pub action: Symbol,
     pub expires_at: u64,
-    
+
     pub event_type_id: u32,
     pub schema_version: u32,
     pub ledger_sequence: u32,

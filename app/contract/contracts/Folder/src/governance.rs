@@ -62,7 +62,11 @@ pub enum ProposalAction {
     /// Update the global platform fee configuration.
     SetFeeConfig { fee_bps: u32 },
     /// Override fee configuration for a specific token.
-    SetPerAssetFee { token: Address, fee_bps: u32, arbiter_bps: u32 },
+    SetPerAssetFee {
+        token: Address,
+        fee_bps: u32,
+        arbiter_bps: u32,
+    },
     /// Change the platform wallet address.
     SetPlatformWallet { wallet: Address },
     /// Transfer the admin role to a new address.
@@ -72,7 +76,10 @@ pub enum ProposalAction {
     /// Revoke a role from a target address.
     RevokeRole { target: Address, role: u32 },
     /// Replace the signer set and threshold.
-    UpdateSignerSet { new_signers: Vec<Address>, new_threshold: u32 },
+    UpdateSignerSet {
+        new_signers: Vec<Address>,
+        new_threshold: u32,
+    },
 }
 
 // ---------------------------------------------------------------------------
@@ -197,11 +204,12 @@ fn has_approved(env: &Env, proposal_id: &BytesN<32>, signer: &Address) -> bool {
 fn record_approval(env: &Env, proposal_id: &BytesN<32>, signer: &Address) {
     let key = DataKey::GovernanceApproval(proposal_id.clone(), signer.clone());
     env.storage().persistent().set(&key, &true);
-    env.storage()
-        .persistent()
-        .extend_ttl(&key, PROPOSAL_ACTIVE_TTL_SECS as u32, PROPOSAL_ACTIVE_TTL_SECS as u32);
+    env.storage().persistent().extend_ttl(
+        &key,
+        PROPOSAL_ACTIVE_TTL_SECS as u32,
+        PROPOSAL_ACTIVE_TTL_SECS as u32,
+    );
 }
-
 
 // ---------------------------------------------------------------------------
 // Proposal ID derivation
@@ -365,7 +373,13 @@ pub fn create_proposal(
     record_approval(env, &proposal_id, &proposer);
 
     // 8. Emit ProposalCreated event
-    emit_proposal_created(env, &proposal_id, &proposer, proposal.expires_at, action_tag(&proposal.action));
+    emit_proposal_created(
+        env,
+        &proposal_id,
+        &proposer,
+        proposal.expires_at,
+        action_tag(&proposal.action),
+    );
 
     Ok(proposal_id)
 }
@@ -393,8 +407,7 @@ pub fn approve_proposal(
     }
 
     // 2. Proposal existence
-    let mut proposal = get_proposal(env, &proposal_id)
-        .ok_or(RustAcademyError::ProposalNotFound)?;
+    let mut proposal = get_proposal(env, &proposal_id).ok_or(RustAcademyError::ProposalNotFound)?;
 
     // 3. Expiry
     if env.ledger().timestamp() >= proposal.expires_at {
@@ -423,7 +436,13 @@ pub fn approve_proposal(
 
     set_proposal(env, &proposal, PROPOSAL_ACTIVE_TTL_SECS);
 
-    emit_proposal_approved(env, &proposal_id, &caller, proposal.approval_count, threshold);
+    emit_proposal_approved(
+        env,
+        &proposal_id,
+        &caller,
+        proposal.approval_count,
+        threshold,
+    );
 
     Ok(())
 }
@@ -438,13 +457,9 @@ pub fn approve_proposal(
 /// - `SignatureExpired`
 /// - `InvalidProposalState`
 /// - `InsufficientApprovals`
-pub fn execute_proposal(
-    env: &Env,
-    proposal_id: BytesN<32>,
-) -> Result<(), RustAcademyError> {
+pub fn execute_proposal(env: &Env, proposal_id: BytesN<32>) -> Result<(), RustAcademyError> {
     // 1. Proposal existence
-    let mut proposal = get_proposal(env, &proposal_id)
-        .ok_or(RustAcademyError::ProposalNotFound)?;
+    let mut proposal = get_proposal(env, &proposal_id).ok_or(RustAcademyError::ProposalNotFound)?;
 
     // 2. Expiry
     if env.ledger().timestamp() >= proposal.expires_at {
@@ -469,7 +484,12 @@ pub fn execute_proposal(
     proposal.status = ProposalStatus::Executed;
     set_proposal(env, &proposal, PROPOSAL_TERMINAL_TTL_SECS);
 
-    emit_proposal_executed(env, &proposal_id, action_tag(&proposal.action), proposal.approval_count);
+    emit_proposal_executed(
+        env,
+        &proposal_id,
+        action_tag(&proposal.action),
+        proposal.approval_count,
+    );
 
     Ok(())
 }
@@ -493,8 +513,7 @@ pub fn cancel_proposal(
         return Err(RustAcademyError::NotASigner);
     }
 
-    let mut proposal = get_proposal(env, &proposal_id)
-        .ok_or(RustAcademyError::ProposalNotFound)?;
+    let mut proposal = get_proposal(env, &proposal_id).ok_or(RustAcademyError::ProposalNotFound)?;
 
     if proposal.status != ProposalStatus::Pending {
         return Err(RustAcademyError::InvalidProposalState);
@@ -507,7 +526,6 @@ pub fn cancel_proposal(
 
     Ok(())
 }
-
 
 // ---------------------------------------------------------------------------
 // Action dispatch
@@ -523,7 +541,10 @@ fn apply_action(env: &Env, action: &ProposalAction) -> Result<(), RustAcademyErr
             crate::storage::set_paused(env, *paused);
             Ok(())
         }
-        ProposalAction::SetPauseFlags { enable_mask, disable_mask } => {
+        ProposalAction::SetPauseFlags {
+            enable_mask,
+            disable_mask,
+        } => {
             crate::storage::apply_pause_flags(env, *enable_mask, *disable_mask);
             Ok(())
         }
@@ -544,7 +565,10 @@ fn apply_action(env: &Env, action: &ProposalAction) -> Result<(), RustAcademyErr
             crate::storage::set_admin(env, new_admin);
             Ok(())
         }
-        ProposalAction::UpdateSignerSet { new_signers, new_threshold } => {
+        ProposalAction::UpdateSignerSet {
+            new_signers,
+            new_threshold,
+        } => {
             validate_signer_set(env, new_signers, *new_threshold)?;
             set_signer_set(env, new_signers);
             set_threshold(env, *new_threshold);
@@ -563,7 +587,11 @@ fn apply_action(env: &Env, action: &ProposalAction) -> Result<(), RustAcademyErr
             crate::storage::revoke_role(env, target, r);
             Ok(())
         }
-        ProposalAction::SetPerAssetFee { token, fee_bps, arbiter_bps } => {
+        ProposalAction::SetPerAssetFee {
+            token,
+            fee_bps,
+            arbiter_bps,
+        } => {
             use crate::types::PerAssetFeeConfig;
             let config = PerAssetFeeConfig {
                 fee_bps: *fee_bps,
@@ -576,7 +604,8 @@ fn apply_action(env: &Env, action: &ProposalAction) -> Result<(), RustAcademyErr
         ProposalAction::UpgradeContract { new_wasm_hash } => {
             // Upgrade is executed after the governance threshold is met.
             // The actual WASM swap happens here.
-            env.deployer().update_current_contract_wasm(new_wasm_hash.clone());
+            env.deployer()
+                .update_current_contract_wasm(new_wasm_hash.clone());
             Ok(())
         }
     }

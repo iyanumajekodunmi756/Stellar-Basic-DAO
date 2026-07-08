@@ -6,9 +6,7 @@
 use crate::{
     admin,
     events::{EVENT_REPLAY_FIELDS, EVENT_SCHEMA_VERSION},
-    storage::{
-        self, CURRENT_CONTRACT_VERSION, LEGACY_CONTRACT_VERSION,
-    },
+    storage::{self, CURRENT_CONTRACT_VERSION, LEGACY_CONTRACT_VERSION},
     types::{
         BuildManifest, ContractHealth, DeploymentMetadata, FeatureFlags, SchemaCompatibility,
         SupportedVersions, UpgradeState,

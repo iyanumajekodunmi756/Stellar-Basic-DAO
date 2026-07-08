@@ -1,4 +1,4 @@
-use crate::{types::FeeConfig,  RustAcademyContract,  RustAcademyContractClient};
+use crate::{types::FeeConfig, RustAcademyContract, RustAcademyContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     token, Address, Bytes, Env,
@@ -7,7 +7,7 @@ use soroban_sdk::{
 fn setup_test(
     env: &Env,
 ) -> (
-     RustAcademyContractClient<'_>,
+    RustAcademyContractClient<'_>,
     Address,
     Address,
     Address,
@@ -18,8 +18,8 @@ fn setup_test(
     let owner = Address::generate(env);
     let recipient = Address::generate(env);
 
-    let contract_id = env.register( RustAcademyContract, ());
-    let client =  RustAcademyContractClient::new(env, &contract_id);
+    let contract_id = env.register(RustAcademyContract, ());
+    let client = RustAcademyContractClient::new(env, &contract_id);
 
     client.initialize(&admin);
 

@@ -20,7 +20,7 @@ extern crate std;
 
 use crate::{
     storage::{put_escrow, DataKey, PRIVACY_ENABLED_KEY},
-    EscrowEntry, EscrowStatus,  RustAcademyContract,  RustAcademyContractClient,
+    EscrowEntry, EscrowStatus, RustAcademyContract, RustAcademyContractClient,
 };
 use soroban_sdk::{
     testutils::Address as _, token, xdr::ToXdr, Address, Bytes, BytesN, Env, Symbol, Vec,
@@ -30,11 +30,11 @@ use soroban_sdk::{
 // Shared helpers
 // ---------------------------------------------------------------------------
 
-fn setup<'a>() -> (Env,  RustAcademyContractClient<'a>) {
+fn setup<'a>() -> (Env, RustAcademyContractClient<'a>) {
     let env = Env::default();
     env.mock_all_auths();
-    let contract_id = env.register( RustAcademyContract, ());
-    let client =  RustAcademyContractClient::new(&env, &contract_id);
+    let contract_id = env.register(RustAcademyContract, ());
+    let client = RustAcademyContractClient::new(&env, &contract_id);
     (env, client)
 }
 
@@ -253,7 +253,7 @@ fn bench_get_privacy() {
 #[test]
 fn bench_legacy_privacy_key_read() {
     let env = Env::default();
-    let contract_id = env.register( RustAcademyContract, ());
+    let contract_id = env.register(RustAcademyContract, ());
     let owner = Address::generate(&env);
     let key = legacy_privacy_storage_key(&env, &owner);
     env.as_contract(&contract_id, || {
@@ -272,7 +272,7 @@ fn bench_legacy_privacy_key_read() {
 #[test]
 fn bench_typed_privacy_key_read() {
     let env = Env::default();
-    let contract_id = env.register( RustAcademyContract, ());
+    let contract_id = env.register(RustAcademyContract, ());
     let owner = Address::generate(&env);
     let key = DataKey::PrivacyEnabled(owner);
     env.as_contract(&contract_id, || {
@@ -291,7 +291,7 @@ fn bench_typed_privacy_key_read() {
 #[test]
 fn bench_legacy_privacy_key_write() {
     let env = Env::default();
-    let contract_id = env.register( RustAcademyContract, ());
+    let contract_id = env.register(RustAcademyContract, ());
     let owner = Address::generate(&env);
     let key = legacy_privacy_storage_key(&env, &owner);
 
@@ -307,7 +307,7 @@ fn bench_legacy_privacy_key_write() {
 #[test]
 fn bench_typed_privacy_key_write() {
     let env = Env::default();
-    let contract_id = env.register( RustAcademyContract, ());
+    let contract_id = env.register(RustAcademyContract, ());
     let owner = Address::generate(&env);
     let key = DataKey::PrivacyEnabled(owner);
 

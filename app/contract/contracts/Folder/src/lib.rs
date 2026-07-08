@@ -51,10 +51,10 @@ mod upgrade_test;
 use errors::RustAcademyError;
 use storage::*;
 use types::{
-    ContractHealth, DeploymentMetadata, DisputeExpiryAction, EscrowEntry,
-    EscrowOperationEstimate, EscrowOperationLimits, EscrowStatus, FeatureFlags, FeeConfig,
-    OracleFeeConfig, PerAssetFeeConfig, PrivacyAwareEscrowView, Role, SchemaCompatibility,
-    StealthDepositParams, SupportedVersions, UpgradeState,
+    ContractHealth, DeploymentMetadata, DisputeExpiryAction, EscrowEntry, EscrowOperationEstimate,
+    EscrowOperationLimits, EscrowStatus, FeatureFlags, FeeConfig, OracleFeeConfig,
+    PerAssetFeeConfig, PrivacyAwareEscrowView, Role, SchemaCompatibility, StealthDepositParams,
+    SupportedVersions, UpgradeState,
 };
 
 pub use types::FeeRatio;
@@ -503,7 +503,16 @@ impl RustAcademyContract {
         threshold: u32,
     ) -> Result<BytesN<32>, RustAcademyError> {
         admin::guard_deposit(&env, PauseFlag::Deposit)?;
-        escrow::deposit_with_arbiters(&env, token, amount, owner, salt, timeout_secs, arbiters, threshold)
+        escrow::deposit_with_arbiters(
+            &env,
+            token,
+            amount,
+            owner,
+            salt,
+            timeout_secs,
+            arbiters,
+            threshold,
+        )
     }
 
     /// Make a partial payment towards an existing escrow.
@@ -1429,10 +1438,7 @@ impl RustAcademyContract {
     /// Execute a proposal that has reached the approval threshold.
     ///
     /// Any caller can trigger execution — no additional auth required.
-    pub fn execute_proposal(
-        env: Env,
-        proposal_id: BytesN<32>,
-    ) -> Result<(), RustAcademyError> {
+    pub fn execute_proposal(env: Env, proposal_id: BytesN<32>) -> Result<(), RustAcademyError> {
         governance::execute_proposal(&env, proposal_id)
     }
 

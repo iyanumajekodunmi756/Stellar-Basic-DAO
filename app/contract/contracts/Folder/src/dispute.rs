@@ -29,9 +29,7 @@ use crate::{
         self, clear_dispute_state, get_dispute_expiry, get_dispute_expiry_action,
         get_dispute_timeout, get_escrow, put_dispute_expiry, put_escrow,
     },
-    types::{
-        DisputeExpiry, DisputeExpiryAction, EscrowEntry, EscrowStatus, HookEventKind, Role,
-    },
+    types::{DisputeExpiry, DisputeExpiryAction, EscrowEntry, EscrowStatus, HookEventKind, Role},
 };
 
 /// Set the global dispute resolution timeout in seconds.
@@ -42,11 +40,7 @@ use crate::{
 /// # Errors
 /// - [`InvalidTimeout`] – `timeout_secs` is zero.
 /// - [`InsufficientRole`] – caller lacks the required role.
-pub fn set_timeout(
-    env: &Env,
-    caller: Address,
-    timeout_secs: u64,
-) -> Result<(), RustAcademyError> {
+pub fn set_timeout(env: &Env, caller: Address, timeout_secs: u64) -> Result<(), RustAcademyError> {
     if timeout_secs == 0 {
         return Err(RustAcademyError::InvalidTimeout);
     }
@@ -110,10 +104,7 @@ pub fn record_dispute_expiry(env: &Env, commitment: BytesN<32>) {
 /// - [`NoDisputeExpiry`] – no dispute expiry metadata exists.
 /// - [`DisputeNotExpired`] – the timeout has not yet elapsed.
 /// - [`InternalError`] – the configured action cannot be applied to this escrow.
-pub fn resolve_expired_dispute(
-    env: &Env,
-    commitment: BytesN<32>,
-) -> Result<(), RustAcademyError> {
+pub fn resolve_expired_dispute(env: &Env, commitment: BytesN<32>) -> Result<(), RustAcademyError> {
     hook::assert_not_reentrant(env)?;
 
     let commitment_bytes: Bytes = commitment.clone().into();
@@ -124,7 +115,8 @@ pub fn resolve_expired_dispute(
         return Err(RustAcademyError::InvalidDisputeState);
     }
 
-    let expiry = get_dispute_expiry(env, &commitment_bytes).ok_or(RustAcademyError::NoDisputeExpiry)?;
+    let expiry =
+        get_dispute_expiry(env, &commitment_bytes).ok_or(RustAcademyError::NoDisputeExpiry)?;
     let now = env.ledger().timestamp();
     if now < expiry.expires_at {
         return Err(RustAcademyError::DisputeNotExpired);
@@ -207,4 +199,3 @@ fn resolve_expiry_recipient(
         }
     }
 }
-

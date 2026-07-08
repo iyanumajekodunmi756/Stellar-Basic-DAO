@@ -43,8 +43,8 @@ use soroban_sdk::{contracttype, Address, Bytes, BytesN, Env, Vec};
 
 use crate::errors::RustAcademyError;
 use crate::types::{
-    DisputeExpiry, DisputeExpiryAction, DisputeVote, EscrowEntry, FeeConfig, Role,
-    StealthEscrowEntry, PerAssetFeeConfig, OracleFeeConfig,
+    DisputeExpiry, DisputeExpiryAction, DisputeVote, EscrowEntry, FeeConfig, OracleFeeConfig,
+    PerAssetFeeConfig, Role, StealthEscrowEntry,
 };
 
 /// Record type for TTL policy selection.
@@ -1061,7 +1061,10 @@ pub fn migrate_oracle_fee_config(config: &mut OracleFeeConfig) {
 /// Returns [`DEFAULT_DISPUTE_TIMEOUT_SECS`] if no explicit value has been set.
 pub fn get_dispute_timeout(env: &Env) -> u64 {
     let key = DataKey::DisputeTimeout;
-    env.storage().persistent().get(&key).unwrap_or(DEFAULT_DISPUTE_TIMEOUT_SECS)
+    env.storage()
+        .persistent()
+        .get(&key)
+        .unwrap_or(DEFAULT_DISPUTE_TIMEOUT_SECS)
 }
 
 /// Set the global dispute resolution timeout in seconds.

@@ -1,8 +1,8 @@
 //! Tests for the stealth address PoC (Issue #157 – Privacy v2).
 
 use crate::{
-    errors:: RustAcademyError, stealth, types::StealthDepositParams, EscrowStatus,  RustAcademyContract,
-     RustAcademyContractClient,
+    errors::RustAcademyError, stealth, types::StealthDepositParams, EscrowStatus,
+    RustAcademyContract, RustAcademyContractClient,
 };
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
@@ -13,11 +13,11 @@ use soroban_sdk::{
 // Helpers
 // ---------------------------------------------------------------------------
 
-fn setup<'a>() -> (Env,  RustAcademyContractClient<'a>) {
+fn setup<'a>() -> (Env, RustAcademyContractClient<'a>) {
     let env = Env::default();
     env.mock_all_auths();
-    let contract_id = env.register( RustAcademyContract, ());
-    let client =  RustAcademyContractClient::new(&env, &contract_id);
+    let contract_id = env.register(RustAcademyContract, ());
+    let client = RustAcademyContractClient::new(&env, &contract_id);
     (env, client)
 }
 
@@ -102,10 +102,7 @@ fn test_stealth_full_flow() {
     assert!(ok);
 
     // Entry is now cleaned up after successful withdrawal (INV-S-4)
-    assert_eq!(
-        client.get_stealth_status(&stealth_address),
-        None
-    );
+    assert_eq!(client.get_stealth_status(&stealth_address), None);
 
     let token_client = token::Client::new(&env, &token);
     assert_eq!(token_client.balance(&recipient), amount);
@@ -139,7 +136,7 @@ fn test_register_wrong_stealth_address_fails() {
         .unwrap_err()
         .unwrap();
 
-    assert_eq!(err,  RustAcademyError::StealthAddressMismatch);
+    assert_eq!(err, RustAcademyError::StealthAddressMismatch);
 }
 
 /// Registering the same stealth address twice must fail.
@@ -217,7 +214,7 @@ fn test_stealth_withdraw_wrong_spend_pub_fails() {
         .unwrap_err()
         .unwrap();
 
-    assert_eq!(err,  RustAcademyError::StealthAddressMismatch);
+    assert_eq!(err, RustAcademyError::StealthAddressMismatch);
 }
 
 /// Double withdrawal must fail with StealthEscrowNotFound (entry auto-cleaned).
@@ -291,7 +288,7 @@ fn test_stealth_withdraw_after_expiry_fails() {
         .unwrap_err()
         .unwrap();
 
-    assert_eq!(err,  RustAcademyError::EscrowExpired);
+    assert_eq!(err, RustAcademyError::EscrowExpired);
 }
 
 /// Registering with zero amount must fail.
@@ -319,7 +316,7 @@ fn test_stealth_register_zero_amount_fails() {
         .unwrap_err()
         .unwrap();
 
-    assert_eq!(err,  RustAcademyError::InvalidAmount);
+    assert_eq!(err, RustAcademyError::InvalidAmount);
 }
 
 /// Querying a non-existent stealth address returns None.
@@ -362,5 +359,5 @@ fn test_stealth_register_fails_when_paused() {
         .unwrap_err()
         .unwrap();
 
-    assert_eq!(err,  RustAcademyError::ContractPaused);
+    assert_eq!(err, RustAcademyError::ContractPaused);
 }
